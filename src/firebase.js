@@ -6,12 +6,12 @@ import "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCVRbtMG4oG1480fdJ8n9PfayoRuCjfc-s",
-  authDomain: "crud-basico-react-bp.firebaseapp.com",
-  projectId: "crud-basico-react-bp",
-  storageBucket: "crud-basico-react-bp.appspot.com",
-  messagingSenderId: "930698563031",
-  appId: "1:930698563031:web:e2a7cf09ae5d1b1e470f92",
+  apiKey: "AIzaSyAoJrw3rrGow0YhUrn0YoOHehJX_P2tX98",
+  authDomain: "carros-react.firebaseapp.com",
+  projectId: "carros-react",
+  storageBucket: "carros-react.appspot.com",
+  messagingSenderId: "189349064055",
+  appId: "1:189349064055:web:5700a367db876d6b128572",
 };
 
 // Initialize Firebase
