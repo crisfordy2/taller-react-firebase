@@ -8,16 +8,13 @@ const Formulario = () => {
     marca: "",
     color: "",
     modelo: "",
-    precio: 0,
+    precio: "",
     año: "",
     motor: "",
   });
   const [modoEdicion, setModoEdicion] = React.useState(false);
   const [error, setError] = React.useState(null);
-  const [descripcion, setDescripcion] = React.useState("");
   const [id, setId] = React.useState("");
-  const [fruta, setFruta] = React.useState("");
-  // const prueba = ["placa", "marca", "color", "modelo", "precio", "año", "motor"]
 
   React.useEffect(() => {
     const obtenerDatos = async () => {
@@ -38,7 +35,6 @@ const Formulario = () => {
 
   const guardarDatos = async (e) => {
     e.preventDefault();
-    console.log(componentes);
     if (
       !componentes.marca.trim() ||
       !componentes.placa.trim() ||
@@ -64,10 +60,6 @@ const Formulario = () => {
         motor: componentes.motor,
       };
       await db.collection("carros").add(nuevoCarro);
-      // setLista([
-      //   ...lista,
-      //   { nombreFruta: fruta, nombreDescripcion: descripcion },
-      // ]);
     } catch (error) {
       console.log(error);
     }
@@ -78,7 +70,7 @@ const Formulario = () => {
       marca: "",
       color: "",
       modelo: "",
-      precio: 0,
+      precio: "",
       año: "",
       motor: "",
     });
@@ -88,57 +80,81 @@ const Formulario = () => {
   const eliminar = async (id) => {
     try {
       const db = firebase.firestore();
-      await db.collection("frutas").doc(id).delete();
-      const aux = lista.filter((item) => item.id !== id);
-      setLista(aux);
+      await db.collection("carros").doc(id).delete();
     } catch (error) {
       console.log(error);
     }
   };
 
   const auxEditar = (item) => {
-    setFruta(item.nombreFruta);
-    setDescripcion(item.nombreDescripcion);
+    setComponentes({ ...item });
     setModoEdicion(true);
     setId(item.id);
   };
 
   const editar = async (e) => {
     e.preventDefault();
-    if (!fruta.trim()) {
-      setError("Campo fruta vacío");
+
+    if (
+      !componentes.marca.trim() ||
+      !componentes.placa.trim() ||
+      !componentes.color.trim() ||
+      !componentes.motor.trim() ||
+      !componentes.año.trim() ||
+      !componentes.modelo.trim() ||
+      componentes.precio < 1
+    ) {
+      setError("Hay campos vacios");
       return;
     }
 
-    if (!descripcion.trim()) {
-      setError("Campo descripción vacío");
-      return;
-    }
     try {
       const db = firebase.firestore();
-      await db.collection("frutas").doc(id).update({
-        nombreFruta: fruta,
-        nombreDescripcion: descripcion,
+      await db.collection("carros").doc(id).update({
+        placa: componentes.placa,
+        marca: componentes.marca,
+        color: componentes.color,
+        modelo: componentes.modelo,
+        precio: componentes.precio,
+        año: componentes.año,
+        motor: componentes.motor,
       });
     } catch (error) {
       console.log(error);
     }
-    setFruta("");
-    setDescripcion("");
+    setComponentes({
+      placa: "",
+      marca: "",
+      color: "",
+      modelo: "",
+      precio: "",
+      año: "",
+      motor: "",
+    });
     setModoEdicion(false);
     setError(null);
   };
 
   const cancelar = () => {
-    setFruta("");
-    setDescripcion("");
+    setComponentes({
+      placa: "",
+      marca: "",
+      color: "",
+      modelo: "",
+      precio: "",
+      año: "",
+      motor: "",
+    });
     setModoEdicion(false);
     setError(null);
   };
 
   return (
     <div className="container mt-5">
-      <h1 className="text-center">CARROS</h1>
+      <div className="d-flex justify-content-center">
+        <h1 className="text-center mx-2 ">CARROS</h1>
+        <img src="../../carro-deportivo.png" alt="carro" width={60} />
+      </div>
       <hr />
       <div className="row">
         <div className="col-8">
@@ -179,6 +195,7 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, marca: e.target.value })
               }
+              value={componentes.marca}
             />
             <input
               className="form-control mb-2"
@@ -187,6 +204,7 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, modelo: e.target.value })
               }
+              value={componentes.modelo}
             />
             <input
               className="form-control mb-2"
@@ -195,6 +213,7 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, color: e.target.value })
               }
+              value={componentes.color}
             />
             <input
               className="form-control mb-2"
@@ -203,6 +222,7 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, placa: e.target.value })
               }
+              value={componentes.placa}
             />
             <input
               className="form-control mb-2"
@@ -211,14 +231,16 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, año: e.target.value })
               }
+              value={componentes.año}
             />
             <input
               className="form-control mb-2"
-              type="text"
+              type="number"
               placeholder="Ingrese precio"
               onChange={(e) =>
                 setComponentes({ ...componentes, precio: e.target.value })
               }
+              value={componentes.precio}
             />
             <input
               className="form-control mb-2"
@@ -227,6 +249,7 @@ const Formulario = () => {
               onChange={(e) =>
                 setComponentes({ ...componentes, motor: e.target.value })
               }
+              value={componentes.motor}
             />
             {!modoEdicion ? (
               <button className="btn btn-primary btn-block" type="submit">
